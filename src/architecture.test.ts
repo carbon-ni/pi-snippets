@@ -17,11 +17,47 @@ async function collectTypeScriptFiles(directory: string): Promise<string[]> {
   return files.flat();
 }
 
+async function readSourceFiles(
+  directory: string,
+): Promise<Array<{ file: string; source: string }>> {
+  const files = await collectTypeScriptFiles(directory);
+  return Promise.all(files.map(async (file) => ({ file, source: await readFile(file, "utf8") })));
+}
+
 describe("documented architecture", () => {
   it("keeps lib free from infrastructure imports", async () => {
-    const libFiles = await collectTypeScriptFiles("src/lib");
-    const contents = await Promise.all(libFiles.map((file) => readFile(file, "utf8")));
+    const sources = await readSourceFiles("src/lib");
 
-    expect(contents.join("\n")).not.toMatch(/from "node:/);
+    expect(sources.map(({ source }) => source).join("\n")).not.toMatch(/from "node:/);
+  });
+
+  it("keeps dependency direction between layers", async () => {
+    const layers = [
+      {
+        directory: "src/domain",
+        forbiddenImport: /from "\.\.\/(infra|bin)\//,
+      },
+      {
+        directory: "src/lib",
+        forbiddenImport: /from "\.\.\/(domain|infra|bin)\//,
+      },
+      {
+        directory: "src/infra",
+        forbiddenImport: /from "\.\.\/bin\//,
+      },
+    ];
+
+    const violations = (
+      await Promise.all(
+        layers.map(async ({ directory, forbiddenImport }) => {
+          const sources = await readSourceFiles(directory);
+          return sources
+            .filter(({ source }) => forbiddenImport.test(source))
+            .map(({ file }) => file);
+        }),
+      )
+    ).flat();
+
+    expect(violations).toEqual([]);
   });
 });
