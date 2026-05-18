@@ -1,0 +1,22 @@
+{
+  "name": "pi-snippets",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "eslint .",
+    "test": "node --test",
+    "coverage": "node --test --experimental-test-coverage",
+    "check": "npm run format && npm run lint && npm test",
+    "all": "npm run check && npm run coverage"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
