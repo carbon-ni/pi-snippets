@@ -17,10 +17,10 @@ describe("snippet trigger", () => {
     expect(getSnippetTriggerQuery("hello")).toBeNull();
   });
 
-  it("replaces trailing trigger with snippet content", () => {
-    expect(applySnippetCompletion(";tdd", "Write tests first")).toBe("Write tests first");
+  it("replaces trailing trigger with snippet content followed by a space", () => {
+    expect(applySnippetCompletion(";tdd", "Write tests first")).toBe("Write tests first ");
     expect(applySnippetCompletion("please ;tdd", "Write tests first")).toBe(
-      "please Write tests first",
+      "please Write tests first ",
     );
   });
 });

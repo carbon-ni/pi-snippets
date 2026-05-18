@@ -54,7 +54,7 @@ export function shouldTriggerSnippets(text: string, trigger = ";"): boolean {
 export function applySnippetCompletion(text: string, snippet: string, trigger = ";"): string {
   const parsed = parseSnippetTrigger(text, trigger);
   if (!parsed) return text;
-  return `${text.slice(0, parsed.triggerStart)}${snippet}`;
+  return `${text.slice(0, parsed.triggerStart)}${snippet} `;
 }
 
 function score(value: string, query: string): number | null {
