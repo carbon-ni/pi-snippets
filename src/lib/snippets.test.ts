@@ -6,7 +6,7 @@ import {
   mergeSnippets,
   resolveSnippetByAlias,
   shouldTriggerSnippets,
-} from "./snippets.js";
+} from "./snippets";
 
 describe("snippet trigger", () => {
   it("detects snippet trigger and query", () => {

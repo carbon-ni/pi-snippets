@@ -8,7 +8,7 @@ import {
   getHistorySnippetTriggerQuery,
   shouldTriggerHistorySnippets,
   sortHistorySnippets,
-} from "./history-snippets.js";
+} from "./history-snippets";
 
 describe("history snippet trigger", () => {
   it("detects quote tab trigger and query", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSnippetEditor, type BaseEditor } from "./editor.js";
+import { createSnippetEditor, type BaseEditor } from "./editor";
 
 class FakeEditor implements BaseEditor {
   tui = { requestRender: vi.fn() };

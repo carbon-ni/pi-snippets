@@ -5,24 +5,24 @@ import {
   type ExtensionContext,
 } from "@mariozechner/pi-coding-agent";
 import { Container, type SelectItem, SelectList, Text, matchesKey } from "@mariozechner/pi-tui";
-import { loadExtensionConfig } from "../infra/config.js";
-import { createSnippetEditor } from "../domain/editor.js";
+import { loadExtensionConfig } from "../infra/config";
+import { createSnippetEditor } from "../domain/editor";
 import {
   applyHistorySnippetCompletion,
   collectLastAgentMessages,
   createOpenHistorySnippetPicker,
   getHistorySnippetTriggerQuery,
   shouldTriggerHistorySnippets,
-} from "../lib/history-snippets.js";
-import { createResolveOrPickSnippet } from "../domain/picker.js";
-import { loadCustomSnippets } from "../infra/snippet-store.js";
+} from "../lib/history-snippets";
+import { createResolveOrPickSnippet } from "../domain/picker";
+import { loadCustomSnippets } from "../infra/snippet-store";
 import {
   applySnippetCompletion,
   DEFAULT_SNIPPETS,
   getSnippetTriggerQuery,
   mergeSnippets,
   shouldTriggerSnippets,
-} from "../lib/snippets.js";
+} from "../lib/snippets";
 
 function selectWithTab(ctx: ExtensionContext, title: string, options: string[]) {
   return ctx.ui.custom<string | undefined>((tui, theme, _keybindings, done) => {

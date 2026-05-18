@@ -1,1 +1,1 @@
-export { default } from "./bin/index.js";
+export { default } from "./bin/index";

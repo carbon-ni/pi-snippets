@@ -37,6 +37,15 @@ describe("documented architecture", () => {
     expect(sources.map(({ source }) => source).join("\n")).not.toMatch(/from "node:/);
   });
 
+  it("keeps TypeScript source imports free from emitted JavaScript extensions", async () => {
+    const sources = await readSourceFiles("src");
+    const violations = sources
+      .filter(({ source }) => /from "[^"\n]+\.js"/.test(source))
+      .map(({ file }) => file);
+
+    expect(violations).toEqual([]);
+  });
+
   it("keeps dependency direction between layers", async () => {
     const layers = [
       {
