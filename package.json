@@ -7,16 +7,26 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint .",
-    "test": "node --test",
-    "coverage": "node --test --experimental-test-coverage",
-    "check": "npm run format && npm run lint && npm test",
-    "all": "npm run check && npm run coverage"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "check": "npm run format && npm run lint && npm run typecheck && npm test",
+    "all": "npm run check && npm run coverage",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^25.8.0",
+    "@vitest/coverage-v8": "^4.1.6",
     "eslint": "^9.39.4",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=22"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
   }
 }
