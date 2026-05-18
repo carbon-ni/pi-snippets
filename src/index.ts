@@ -7,6 +7,13 @@ import {
 import { Container, type SelectItem, SelectList, Text, matchesKey } from "@mariozechner/pi-tui";
 import { loadExtensionConfig } from "./lib/config.js";
 import { createSnippetEditor } from "./lib/editor.js";
+import {
+  applyHistorySnippetCompletion,
+  collectLastAgentMessages,
+  createOpenHistorySnippetPicker,
+  getHistorySnippetTriggerQuery,
+  shouldTriggerHistorySnippets,
+} from "./lib/history-snippets.js";
 import { createResolveOrPickSnippet } from "./lib/picker.js";
 import { loadCustomSnippets } from "./lib/store.js";
 import {
@@ -76,6 +83,9 @@ export default function (pi: ExtensionAPI) {
       getSnippetTriggerQuery: (text) => getSnippetTriggerQuery(text, config.snippetTrigger),
       applySnippetCompletion: (text, picked) =>
         applySnippetCompletion(text, picked, config.snippetTrigger),
+      shouldTriggerHistorySnippets,
+      getHistorySnippetTriggerQuery,
+      applyHistorySnippetCompletion,
     });
 
     ctx.ui.setEditorComponent((tui, theme, keybindings) => {
@@ -85,7 +95,21 @@ export default function (pi: ExtensionAPI) {
         select: (title, options) => selectWithTab(ctx, title, options),
       });
 
-      return new SnippetEditor(tui, theme, keybindings, resolveOrPickSnippet);
+      const openHistorySnippetPicker = createOpenHistorySnippetPicker({
+        getMessages: () => collectLastAgentMessages(ctx.sessionManager.getBranch(), 3),
+        messagesBack: 3,
+        historySnippetSort: "recency",
+        notify: ctx.ui.notify,
+        select: (title, options) => selectWithTab(ctx, title, options),
+      });
+
+      return new SnippetEditor(
+        tui,
+        theme,
+        keybindings,
+        resolveOrPickSnippet,
+        openHistorySnippetPicker,
+      );
     });
   });
 }

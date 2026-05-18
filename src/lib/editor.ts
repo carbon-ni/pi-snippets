@@ -13,9 +13,13 @@ export type EditorDeps = {
   shouldTriggerSnippets: (text: string) => boolean;
   getSnippetTriggerQuery: (text: string) => string | null;
   applySnippetCompletion: (text: string, picked: string) => string;
+  shouldTriggerHistorySnippets: (text: string) => boolean;
+  getHistorySnippetTriggerQuery: (text: string) => string | null;
+  applyHistorySnippetCompletion: (text: string, picked: string) => string;
 };
 
 export type ResolveSnippet = (alias: string) => Promise<string | undefined>;
+export type OpenHistorySnippetPicker = (query: string) => Promise<string | undefined>;
 
 export function createSnippetEditor(deps: EditorDeps) {
   return class SnippetEditor extends deps.CustomEditor {
@@ -26,6 +30,7 @@ export function createSnippetEditor(deps: EditorDeps) {
       theme: unknown,
       keybindings: unknown,
       private readonly resolveOrPickSnippet: ResolveSnippet,
+      private readonly openHistorySnippetPicker: OpenHistorySnippetPicker,
     ) {
       super(tui as never, theme as never, keybindings as never);
     }
@@ -42,6 +47,25 @@ export function createSnippetEditor(deps: EditorDeps) {
           .then((picked) => {
             if (!picked) return;
             this.setText(deps.applySnippetCompletion(this.getText(), picked));
+            this.tui.requestRender();
+          })
+          .finally(() => {
+            this.pickerOpen = false;
+          });
+        return;
+      }
+
+      if (
+        deps.matchesKey(data, "tab") &&
+        !this.pickerOpen &&
+        deps.shouldTriggerHistorySnippets(this.getText())
+      ) {
+        const query = deps.getHistorySnippetTriggerQuery(this.getText()) ?? "";
+        this.pickerOpen = true;
+        void this.openHistorySnippetPicker(query)
+          .then((picked) => {
+            if (!picked) return;
+            this.setText(deps.applyHistorySnippetCompletion(this.getText(), picked));
             this.tui.requestRender();
           })
           .finally(() => {

@@ -20,6 +20,12 @@ declare module "@mariozechner/pi-coding-agent" {
 
   export type ExtensionContext = {
     cwd: string;
+    sessionManager: {
+      getBranch(): Array<{
+        type?: string;
+        message?: { role?: string; content?: unknown };
+      }>;
+    };
     ui: {
       notify(message: string, level: "info" | "warn" | "error"): void;
       select(title: string, options: string[]): Promise<string | undefined>;
