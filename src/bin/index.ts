@@ -6,7 +6,7 @@ import {
 } from "@mariozechner/pi-coding-agent";
 import { Container, type SelectItem, SelectList, Text, matchesKey } from "@mariozechner/pi-tui";
 import { loadExtensionConfig } from "../infra/config.js";
-import { createSnippetEditor } from "../lib/editor.js";
+import { createSnippetEditor } from "../domain/editor.js";
 import {
   applyHistorySnippetCompletion,
   collectLastAgentMessages,
@@ -14,7 +14,7 @@ import {
   getHistorySnippetTriggerQuery,
   shouldTriggerHistorySnippets,
 } from "../lib/history-snippets.js";
-import { createResolveOrPickSnippet } from "../lib/picker.js";
+import { createResolveOrPickSnippet } from "../domain/picker.js";
 import { loadCustomSnippets } from "../infra/snippet-store.js";
 import {
   applySnippetCompletion,

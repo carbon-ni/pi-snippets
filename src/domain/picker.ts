@@ -1,4 +1,4 @@
-import { filterSnippetOptions, resolveSnippetByAlias, type Snippet } from "./snippets.js";
+import { filterSnippetOptions, resolveSnippetByAlias, type Snippet } from "../lib/snippets.js";
 
 type NotifyLevel = "info" | "warn" | "error";
 
