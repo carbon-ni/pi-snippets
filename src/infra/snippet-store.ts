@@ -1,7 +1,7 @@
 import { access, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import type { Snippet } from "./snippets.js";
+import type { Snippet } from "../lib/snippets.js";
 
 type SnippetFile = {
   version?: number;
