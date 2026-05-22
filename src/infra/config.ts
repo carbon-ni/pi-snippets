@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
@@ -10,8 +10,12 @@ const DEFAULT_CONFIG: ExtensionConfig = {
   snippetTrigger: ";",
 };
 
+const MAX_CONFIG_FILE_BYTES = 16 * 1024; // 16 KB — configs are tiny
+const MAX_TRIGGER_LENGTH = 8;
+
 function normalizeSnippetTrigger(value: unknown): string {
   if (typeof value !== "string" || value.length === 0) return DEFAULT_CONFIG.snippetTrigger;
+  if (value.length > MAX_TRIGGER_LENGTH) return DEFAULT_CONFIG.snippetTrigger;
   return value;
 }
 
@@ -23,9 +27,17 @@ async function loadConfigFile(filePath: string): Promise<ExtensionConfig | undef
   }
 
   try {
+    const fileStat = await stat(filePath);
+    if (fileStat.size > MAX_CONFIG_FILE_BYTES) return undefined;
+
     const content = await readFile(filePath, "utf8");
-    const parsed = JSON.parse(content) as { snippetTrigger?: unknown };
-    return { snippetTrigger: normalizeSnippetTrigger(parsed.snippetTrigger) };
+    const parsed = JSON.parse(content);
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return undefined;
+
+    return {
+      snippetTrigger: normalizeSnippetTrigger((parsed as Record<string, unknown>).snippetTrigger),
+    };
   } catch {
     return undefined;
   }
