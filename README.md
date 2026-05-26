@@ -1,21 +1,91 @@
 # pi-snippets
 
-Minimal Pi extension for editor snippets.
+Composable prompt snippets for the Pi editor.
+
+`pi-snippets` lets you build prompts from small reusable fragments instead of relying on one fixed template. Type an alias, press `<Tab>`, insert a fragment, then keep composing with project-specific instructions, personal habits, and task-focused guidance directly in the editor.
+
+## Why
+
+Prompts are more useful when they are modular. A single template is fixed, but snippets can be mixed and matched:
+
+```text
+;tdd<Tab>
+;review<Tab>
+;readme<Tab>
+```
+
+Use snippets as small thinking blocks. Compose them in the order the task needs.
+
+## Composable snippet examples
+
+Snippets work best when they are small enough to combine:
+
+```json
+{
+  "version": 1,
+  "snippets": [
+    {
+      "key": "tdd",
+      "content": "Start with a failing deterministic test."
+    },
+    {
+      "key": "step",
+      "content": "Make the smallest change that produces useful feedback."
+    },
+    {
+      "key": "edge",
+      "content": "Cover happy path, unhappy path, and edge cases."
+    },
+    {
+      "key": "why",
+      "content": "Explain trade-offs and why this design is simpler."
+    },
+    {
+      "key": "safe",
+      "content": "Avoid broad refactors; keep behavior unchanged unless asked."
+    }
+  ]
+}
+```
+
+Each snippet should express one reusable instruction. That makes them easy to mix and match across different tasks:
+
+```text
+;tdd<Tab> ;step<Tab> ;edge<Tab>
+```
+
+```text
+;review<Tab> ;why<Tab> ;safe<Tab>
+```
+
+```text
+;readme<Tab> ;why<Tab> ;edge<Tab>
+```
+
+```text
+;refactor<Tab> ;step<Tab> ;safe<Tab>
+```
 
 ## Usage
 
-Type `;alias<Tab>` in Pi editor:
+Type `;alias<Tab>` in the Pi editor:
 
-- exact alias inserts immediately
-- partial alias opens picker
+- exact alias inserts snippet immediately
+- partial alias opens filtered picker
 - empty `;<Tab>` opens all snippets
 
 Built-ins:
 
-- `refactor`
-- `tests`
-- `review`
-- `readme`
+- `refactor` — refactor while keeping behavior unchanged
+- `tests` — write deterministic tests first
+- `review` — review readability, coupling/cohesion, and edge-case safety
+- `readme` — update README with problem, solution, usage, and examples
+
+## History snippets
+
+Type `'query<Tab>` to pick from inline code snippets found in recent assistant messages.
+
+Example: if Pi recently mentioned `npm run check`, typing `'check<Tab>` can offer that command again.
 
 ## Custom snippets
 
