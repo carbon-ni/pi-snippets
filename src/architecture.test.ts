@@ -28,7 +28,11 @@ describe("documented architecture", () => {
   it("keeps lib limited to shared helper modules", async () => {
     const libFiles = await collectTypeScriptFiles("src/lib");
 
-    expect(libFiles.sort()).toEqual(["src/lib/history-snippets.ts", "src/lib/snippets.ts"]);
+    expect(libFiles.sort()).toEqual([
+      "src/lib/history-snippets.ts",
+      "src/lib/snippet-template.ts",
+      "src/lib/snippets.ts",
+    ]);
   });
 
   it("keeps lib free from infrastructure imports", async () => {
