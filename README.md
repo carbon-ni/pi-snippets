@@ -87,6 +87,24 @@ Type `'query<Tab>` to pick from inline code snippets found in recent assistant m
 
 Example: if Pi recently mentioned `npm run check`, typing `'check<Tab>` can offer that command again.
 
+## Template examples
+
+The template engine supports a small Pi-native subset for future interactive snippets:
+
+| Template                                                  | Inserted text                                            | Meaning                                          |
+| --------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------ |
+| `fn(${1:arg}) { return $1; }$0`                           | `fn(arg) { return arg; }`                                | edit tabstop `1`, mirror updates, finish at `$0` |
+| `Review ${1:file} for ${2:risk}.$0`                       | `Review file for risk.`                                  | two ordered tabstops                             |
+| `Write tests for ${1:behavior}. Include $1 edge cases.$0` | `Write tests for behavior. Include behavior edge cases.` | repeated `$1` mirrors first value                |
+
+Supported markers:
+
+- `${1:default}` — editable placeholder with default text
+- `$1` — mirror after placeholder `1`
+- `$0` — final cursor position
+
+Full UltiSnips compatibility, Python blocks, choices, and transforms are intentionally out of scope for v1.
+
 ## Custom snippets
 
 Project-local snippets override global snippets:
